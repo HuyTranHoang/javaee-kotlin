@@ -16,7 +16,8 @@ class UserService {
     }
 
     fun getUserByEmail(email: String) : User? {
-        return userDAO.findByEmail(email)
+//        return userDAO.findByEmail(email)
+        return userDAO.findByEmailWithHQL(email)
     }
 
     fun createUser(user: User) {

@@ -23,4 +23,21 @@ class UserDAO : JpaDAO<User>(User::class.java) {
 
         return user
     }
+
+    fun findByEmailWithHQL(email: String): User? {
+        var user: User? = null
+
+        try {
+            sessionFactory.openSession().use { session ->
+                val query = session.createNamedQuery("User.findByEmail", User::class.java)
+                query.setParameter("email", email)
+
+                user = query.singleResult
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return user
+    }
 }

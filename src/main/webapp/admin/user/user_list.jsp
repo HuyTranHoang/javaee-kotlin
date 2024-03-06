@@ -26,7 +26,6 @@
                 <td>${user.email}</td>
                 <td>${user.fullName}</td>
                 <td>
-
                     <a href="${contextPath}/admin/users/edit/${user.id}"
                        class="fa-light fa-pen-to-square text-warning text-decoration-none me-3">
                     </a>
@@ -48,7 +47,6 @@
 <form action="${contextPath}/admin/users/delete" method="post" id="deleteForm">
     <input type="hidden" id="deleteUserId" name="deleteUserId">
 </form>
-
 
 <!-- Modal -->
 <div class="modal fade" id="confirmModal" tabindex="-1">
@@ -73,36 +71,39 @@
 <script type="text/javascript">
     function initializeScript() {
 
-        const deleteBtns = $('.delete-btn');
-        const deleteForm = $('#deleteForm');
-        const deleteUserId = $('#deleteUserId');
-        const confirmButton = $('#confirmModal .btn-danger');
+            const deleteBtns = $('.delete-btn');
+            const deleteForm = $('#deleteForm');
+            const deleteUserId = $('#deleteUserId');
+            const confirmButton = $('#confirmModal .btn-danger');
 
-        deleteBtns.each((index, btn) => {
-            $(btn).on('click', function () {
-                const id = $(this).data('id');
-                deleteUserId.val(id);
+            deleteBtns.each((index, btn) => {
+                $(btn).on('click', function () {
+                    const id = $(this).data('id');
+                    deleteUserId.val(id);
+                });
             });
-        });
 
-        confirmButton.on('click', function () {
-            deleteForm.trigger('submit');
-        });
+            confirmButton.on('click', function () {
+                deleteForm.trigger('submit');
+            });
+        }
+
+        <c:if test="${not empty sessionScope.message}">
+
+        function sweetAlertInitialize() {
+            /* global Swal */
+            Swal.fire({
+                title: 'Success!',
+                text: '${sessionScope.message}',
+                icon: 'success'
+            });
+        }
+
+        <% session.removeAttribute("message"); %>
+
+        </c:if>
+
     }
 
-    <c:if test="${not empty sessionScope.message}">
-
-    function sweetAlertInitialize() {
-        /* global Swal */
-        Swal.fire({
-            title: 'Success!',
-            text: '${sessionScope.message}',
-            icon: 'success'
-        });
-    }
-
-    <% session.removeAttribute("message"); %>
-
-    </c:if>
 
 </script>
