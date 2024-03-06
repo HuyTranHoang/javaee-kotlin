@@ -3,7 +3,21 @@
 <jsp:useBean id="users" scope="request" type="java.util.List"/>
 
 <div class="d-flex align-items-center justify-content-between mt-3">
-    <h4 class="text-center gradient-text">User List</h4>
+    <div class="d-flex align-items-center">
+        <h4 class="me-3 gradient-text">User List</h4>
+        <form class="position-relative me-3" action="${contextPath}/admin/users">
+            <input name="search" id="search" value="${param.search}"
+                   class="form-control" style="padding-right: 40px" type="text" placeholder="search..">
+            <button type="submit" class="btn position-absolute" style="top: 8%; right: 0">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+
+        <c:if test="${not empty param.search}">
+            <a href="${contextPath}/admin/users" class="btn btn-danger btn-sm">Clear</a>
+        </c:if>
+    </div>
+
     <a href="${contextPath}/admin/users/new" class="btn btn-success btn-sm">New User</a>
 </div>
 

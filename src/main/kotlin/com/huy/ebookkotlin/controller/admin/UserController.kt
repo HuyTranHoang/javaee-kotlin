@@ -36,8 +36,11 @@ class UserController : HttpServlet() {
     }
 
     private fun listUser(req: HttpServletRequest, resp: HttpServletResponse) {
+
+        val searchString = req.getParameter("search") ?: ""
+
         val userService = UserService()
-        val users = userService.getAllUsers()
+        val users = userService.getAllUsers(searchString)
         req.setAttribute("users", users)
 
         val dispatcher = req.getRequestDispatcher("/admin/user/user_list.jsp")

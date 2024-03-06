@@ -7,8 +7,8 @@ import com.huy.ebookkotlin.entity.User
 class UserService {
     private val userDAO: UserDAO = UserDAO()
 
-    fun getAllUsers() : List<User> {
-        return userDAO.findAll()
+    fun getAllUsers(searchString: String) : List<User> {
+        return userDAO.findAll(searchString)
     }
 
     fun getUserById(id: Int) : User? {

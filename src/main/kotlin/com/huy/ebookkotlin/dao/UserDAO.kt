@@ -40,4 +40,32 @@ class UserDAO : JpaDAO<User>(User::class.java) {
 
         return user
     }
+
+    fun findAll(searchString: String): List<User> {
+        var list: List<User> = emptyList()
+
+        try {
+            sessionFactory.openSession().use { session ->
+                val builder = session.criteriaBuilder
+                val criteria = builder.createQuery(User::class.java)
+                val root = criteria.from(User::class.java)
+
+                criteria.select(root)
+                if (searchString.isNotEmpty() && searchString.isNotBlank()) {
+                    criteria.where(
+                        builder.or(
+                            builder.like(root.get<String>("email"), "%$searchString%"),
+                            builder.like(root.get<String>("fullName"), "%$searchString%")
+                        )
+                    )
+                }
+
+                list = session.createQuery(criteria).resultList
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return list
+    }
 }
