@@ -81,7 +81,7 @@ class UserController : HttpServlet() {
 
         val userService = UserService()
 
-        if (userService.getUserByEmail(user.email) != null) {
+        if(userService.getUserByEmail(user.email) != null) {
             req.session.setAttribute("error", "User with email ${user.email} already exists!")
             resp.sendRedirect(req.contextPath + "/admin/users/new")
             return

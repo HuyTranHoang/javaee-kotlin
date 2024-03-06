@@ -1,10 +1,8 @@
 package com.huy.ebookkotlin.dao
 
 import com.huy.ebookkotlin.config.HibernateSessionFactoryConfig
-import io.github.oshai.kotlinlogging.KotlinLogging
 import org.hibernate.SessionFactory
 import org.hibernate.Transaction
-private val logger = KotlinLogging.logger {}
 
 open class JpaDAO<T>(type: Class<T>) {
 
@@ -26,7 +24,6 @@ open class JpaDAO<T>(type: Class<T>) {
             }
         } catch (e: Exception) {
             transaction?.rollback()
-            logger.error(e) { "Error creating entity" }
             e.printStackTrace()
         }
 
@@ -43,7 +40,6 @@ open class JpaDAO<T>(type: Class<T>) {
             }
         } catch (e: Exception) {
             transaction?.rollback()
-            logger.error(e) { "Error updating entity" }
             e.printStackTrace()
         }
 
@@ -57,7 +53,6 @@ open class JpaDAO<T>(type: Class<T>) {
                 t = session.get(this.type, id)
             }
         } catch (e: Exception) {
-            logger.error(e) { "Error finding entity" }
             e.printStackTrace()
         }
 
@@ -75,7 +70,6 @@ open class JpaDAO<T>(type: Class<T>) {
             }
         } catch (e: Exception) {
             transaction?.rollback()
-            logger.error(e) { "Error deleting entity" }
             e.printStackTrace()
         }
     }
@@ -92,7 +86,6 @@ open class JpaDAO<T>(type: Class<T>) {
                 list = session.createQuery(criteria).resultList
             }
         } catch (e: Exception) {
-            logger.error(e) { "Error finding all entities" }
             e.printStackTrace()
         }
 
@@ -111,7 +104,6 @@ open class JpaDAO<T>(type: Class<T>) {
                 count = session.createQuery(criteria).singleResult
             }
         } catch (e: Exception) {
-            logger.error(e) { "Error counting entities" }
             e.printStackTrace()
         }
 
