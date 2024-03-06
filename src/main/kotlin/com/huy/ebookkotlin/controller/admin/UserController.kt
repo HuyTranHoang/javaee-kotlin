@@ -45,6 +45,9 @@ class UserController : HttpServlet() {
     }
 
     private fun showCreateForm(req: HttpServletRequest, resp: HttpServletResponse) {
+        val user = User()
+        req.setAttribute("mode", "create")
+        req.setAttribute("user", user)
         val dispatcher = req.getRequestDispatcher("/admin/user/user_form.jsp")
         dispatcher.forward(req, resp)
     }
@@ -59,12 +62,13 @@ class UserController : HttpServlet() {
             val user = userService.getUserById(userId)
 
             if (user != null) {
+                req.setAttribute("mode", "edit")
                 req.setAttribute("user", user)
             }
 
             //TODO: handle else case
 
-            val dispatcher = req.getRequestDispatcher("/admin/user/user_form_update.jsp")
+            val dispatcher = req.getRequestDispatcher("/admin/user/user_form.jsp")
             dispatcher.forward(req, resp)
         } else {
             resp.sendRedirect(req.contextPath + "/admin/users")
