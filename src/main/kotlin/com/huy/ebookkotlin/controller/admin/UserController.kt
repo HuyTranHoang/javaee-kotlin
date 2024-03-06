@@ -102,6 +102,13 @@ class UserController : HttpServlet() {
             e.printStackTrace()
         }
         val userService = UserService()
+
+        if (userService.getUserByEmail(user.email) != null && userService.getUserByEmail(user.email)?.id != user.id) {
+            req.session.setAttribute("error", "User with email ${user.email} already exists!")
+            resp.sendRedirect(req.contextPath + "/admin/users/edit/${user.id}")
+            return
+        }
+
         userService.updateUser(user)
 
         req.session.setAttribute("message", "User has been updated successfully!")

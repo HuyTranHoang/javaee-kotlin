@@ -8,6 +8,11 @@
     <form class="bg-body-secondary rounded p-4" id="userForm"
           style="width: 400px" action="${contextPath}/admin/users/update" method="post">
 
+        <c:if test="${not empty sessionScope.error}">
+            <div class="alert alert-danger">${sessionScope.error}</div>
+            <% session.removeAttribute("error"); %>
+        </c:if>
+
         <input type="hidden" name="id" value="${user.id}">
 
         <div class="mb-3">
