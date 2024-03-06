@@ -68,42 +68,23 @@
 </div>
 
 
-<script type="text/javascript">
+<script defer type="text/javascript">
     function initializeScript() {
 
-            const deleteBtns = $('.delete-btn');
-            const deleteForm = $('#deleteForm');
-            const deleteUserId = $('#deleteUserId');
-            const confirmButton = $('#confirmModal .btn-danger');
+        const deleteBtns = $('.delete-btn');
+        const deleteForm = $('#deleteForm');
+        const deleteUserId = $('#deleteUserId');
+        const confirmButton = $('#confirmModal .btn-danger');
 
-            deleteBtns.each((index, btn) => {
-                $(btn).on('click', function () {
-                    const id = $(this).data('id');
-                    deleteUserId.val(id);
-                });
+        deleteBtns.each((index, btn) => {
+            $(btn).on('click', function () {
+                const id = $(this).data('id');
+                deleteUserId.val(id);
             });
+        });
 
-            confirmButton.on('click', function () {
-                deleteForm.trigger('submit');
-            });
-        }
-
-        <c:if test="${not empty sessionScope.message}">
-
-        function sweetAlertInitialize() {
-            /* global Swal */
-            Swal.fire({
-                title: 'Success!',
-                text: '${sessionScope.message}',
-                icon: 'success'
-            });
-        }
-
-        <% session.removeAttribute("message"); %>
-
-        </c:if>
-
+        confirmButton.on('click', function () {
+            deleteForm.trigger('submit');
+        });
     }
-
-
 </script>
