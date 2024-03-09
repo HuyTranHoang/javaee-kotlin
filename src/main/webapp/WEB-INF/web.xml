@@ -26,4 +26,8 @@
         <param-name>baseUrl</param-name>
         <param-value>http://localhost:8080/ebook_war_exploded</param-value>
     </context-param>
+    
+    <listener>
+        <listener-class>com.huy.ebookkotlin.config.AppContextListener</listener-class>
+    </listener>
 </web-app>

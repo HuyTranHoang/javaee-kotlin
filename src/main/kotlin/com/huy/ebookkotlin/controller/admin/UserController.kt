@@ -3,6 +3,7 @@ package com.huy.ebookkotlin.controller.admin
 import com.huy.ebookkotlin.entity.User
 import com.huy.ebookkotlin.service.UserService
 import org.apache.commons.beanutils.BeanUtils
+import java.util.logging.Logger
 import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
@@ -10,16 +11,22 @@ import javax.servlet.http.HttpServletResponse
 
 @WebServlet(name = "UserController", urlPatterns = ["/admin/users/*"])
 class UserController : HttpServlet() {
+    private lateinit var userService: UserService
+    private val logger = Logger.getLogger(UserController::class.java.name)
+
+    override fun init() {
+        userService = servletContext.getAttribute("userService") as UserService
+    }
+
+
     override fun doGet(req: HttpServletRequest, resp: HttpServletResponse) {
         val action = req.pathInfo ?: ""
 
-        if (action.startsWith("/new")) {
-            showCreateForm(req, resp)
-        } else if (action.startsWith("/edit/")) {
-            showEditForm(req, resp, action)
+        when {
+            action.startsWith("/new") -> showCreateForm(req, resp)
+            action.startsWith("/edit/") -> showEditForm(req, resp, action)
+            else -> listUser(req, resp)
         }
-
-        listUser(req, resp)
     }
 
     override fun doPost(req: HttpServletRequest, resp: HttpServletResponse) {
@@ -39,8 +46,7 @@ class UserController : HttpServlet() {
 
         val searchString = req.getParameter("search") ?: ""
 
-        val userService = UserService()
-        val users = userService.getAllUsers(searchString)
+        val users = this.userService.getAllUsers(searchString)
         req.setAttribute("users", users)
 
         val dispatcher = req.getRequestDispatcher("/admin/user/user_list.jsp")
@@ -61,8 +67,7 @@ class UserController : HttpServlet() {
             val userIdString = parts[2]
             val userId = userIdString.toInt()
 
-            val userService = UserService()
-            val user = userService.getUserById(userId)
+            val user = this.userService.getUserById(userId)
 
             if (user != null) {
                 req.setAttribute("mode", "edit")
@@ -83,18 +88,18 @@ class UserController : HttpServlet() {
         try {
             BeanUtils.populate(user, req.parameterMap)
         } catch (e: Exception) {
-            e.printStackTrace()
+            logger.severe("Error populating user: ${e.message}")
+            resp.sendRedirect(req.contextPath + "/error")
+            return
         }
 
-        val userService = UserService()
-
-        if(userService.getUserByEmail(user.email) != null) {
+        if(this.userService.getUserByEmail(user.email) != null) {
             req.session.setAttribute("error", "User with email ${user.email} already exists!")
             resp.sendRedirect(req.contextPath + "/admin/users/new")
             return
         }
 
-        userService.createUser(user)
+        this.userService.createUser(user)
 
         req.session.setAttribute("message", "User has been created successfully!")
 
@@ -106,17 +111,19 @@ class UserController : HttpServlet() {
         try {
             BeanUtils.populate(user, req.parameterMap)
         } catch (e: Exception) {
-            e.printStackTrace()
+            logger.severe("Error populating user: ${e.message}")
+            resp.sendRedirect(req.contextPath + "/error")
+            return
         }
-        val userService = UserService()
 
-        if (userService.getUserByEmail(user.email) != null && userService.getUserByEmail(user.email)?.id != user.id) {
+        if (this.userService.getUserByEmail(user.email) != null
+                && this.userService.getUserByEmail(user.email)?.id != user.id) {
             req.session.setAttribute("error", "User with email ${user.email} already exists!")
             resp.sendRedirect(req.contextPath + "/admin/users/edit/${user.id}")
             return
         }
 
-        userService.updateUser(user)
+        this.userService.updateUser(user)
 
         req.session.setAttribute("message", "User has been updated successfully!")
 
@@ -125,13 +132,14 @@ class UserController : HttpServlet() {
 
     private fun deleteUser(req: HttpServletRequest, resp: HttpServletResponse) {
         val id = req.getParameter("deleteUserId").toInt()
-        val userService = UserService()
-        userService.deleteUser(id)
+        this.userService.deleteUser(id)
 
         req.session.setAttribute("message", "User has been deleted successfully!")
 
         resp.sendRedirect(req.contextPath + "/admin/users")
     }
+
+
 
 
 }

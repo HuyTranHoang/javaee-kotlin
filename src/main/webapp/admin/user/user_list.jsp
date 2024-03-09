@@ -35,6 +35,11 @@
 
         <c:forEach items="${users}" var="user" varStatus="iterationCount">
             <jsp:useBean id="user" type="com.huy.ebookkotlin.entity.User"/>
+
+<%--            <c:url var="userEdit" value="admin/users/">--%>
+<%--                <c:param name="id" value="${user.id}"/>--%>
+<%--            </c:url>--%>
+
             <tr>
                 <th scope="row">${iterationCount.index + 1}</th>
                 <td>${user.email}</td>
